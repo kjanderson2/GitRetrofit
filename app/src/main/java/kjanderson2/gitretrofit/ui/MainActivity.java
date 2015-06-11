@@ -1,7 +1,10 @@
 package kjanderson2.gitretrofit.ui;
 
+import com.activeandroid.query.Select;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,14 +57,28 @@ public class MainActivity extends ActionBarActivity {
                 //Now ,we need to call for response
                 //Retrofit using gson for JSON-POJO conversion
 
+                GitModel item = new Select().from(GitModel.class).where("Username = ?", user).executeSingle();
+
+                if(item!=null){
+                    populateTV(item);
+                    Log.d("MAINACTIVITY","from db");
+                } else {
+
                 git.getFeed(user,new Callback<GitModel>() {
                     @Override
                     public void success(GitModel gitmodel, Response response) {
                         //we get json object from github server to our POJO or model class
-
-                        tv.setText("Github ID: " + gitmodel.getId()+"\nGithub Name :"+gitmodel.getName()+"\nWebsite :"+gitmodel.getBlog()+"\nCompany Name :"+gitmodel.getCompany());
-
+                        populateTV(gitmodel);
                         pbar.setVisibility(View.INVISIBLE);           //disable progressbar
+
+                        GitModel user = new GitModel();
+                        user.setLogin(gitmodel.getLogin());
+                        user.setIdentification(gitmodel.getIdentification());
+                        user.setName(gitmodel.getName());
+                        user.setCompany(gitmodel.getCompany());
+                        user.setBlog(gitmodel.getBlog());
+                        user.setEmail(gitmodel.getEmail());
+                        user.save();
                     }
 
                     @Override
@@ -70,8 +87,12 @@ public class MainActivity extends ActionBarActivity {
                         pbar.setVisibility(View.INVISIBLE);           //disable progressbar
                     }
                 });
-            }
+            }}
         });
+    }
+
+    private void populateTV(GitModel gitmodel){
+        tv.setText("Github ID: " + gitmodel.getIdentification()+"\nGithub Name :"+gitmodel.getName()+"\nWebsite :"+gitmodel.getBlog()+"\nCompany Name :"+gitmodel.getCompany());
     }
 
 

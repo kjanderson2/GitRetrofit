@@ -4,13 +4,18 @@ package kjanderson2.gitretrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GitModel {
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
-    @Expose
+@Table(name="Gitmodel")
+public class GitModel extends Model{
+
+    @Expose @Column(name="Username", unique = true, onUniqueConflict = Column.ConflictAction.FAIL)
     private String login;
 
-    @Expose
-    private Integer id;
+    @Expose @Column(name="Identification",unique= true, onUniqueConflict = Column.ConflictAction.FAIL)
+    private Integer identification;
 
     @SerializedName("avatar_url")
     @Expose
@@ -70,19 +75,19 @@ public class GitModel {
     @Expose
     private Boolean siteAdmin;
 
-    @Expose
+    @Expose @Column(name="Name")
     private String name;
 
-    @Expose
+    @Expose @Column(name="Company")
     private String company;
 
-    @Expose
+    @Expose @Column(name="Blog")
     private String blog;
 
     @Expose
     private String location;
 
-    @Expose
+    @Expose @Column(name="Email")
     private String email;
 
     @Expose
@@ -136,8 +141,8 @@ public class GitModel {
      * @return
      * The id
      */
-    public Integer getId() {
-        return id;
+    public Integer getIdentification() {
+        return identification;
     }
 
     /**
@@ -145,8 +150,8 @@ public class GitModel {
      * @param id
      * The id
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdentification(Integer id) {
+        this.identification = id;
     }
 
     /**
